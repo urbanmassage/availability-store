@@ -162,8 +162,8 @@ var AvailabilityStore = function AvailabilityStore() {
                                 from: store.periods[i].from,
                                 to: store.periods[i].to
                             }, {
-                                from: lastPeriod[i].from,
-                                to: lastPeriod[i].to
+                                from: lastPeriod.from,
+                                to: lastPeriod.to
                             });
 
                             var replacementPeriod = {
