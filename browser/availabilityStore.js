@@ -3638,8 +3638,8 @@ var AvailabilityStore = function AvailabilityStore() {
 
     this.calculateRangeUnion = function(range1, range2) {
         return {
-            from: (range1.start < range2.start ? range1.start : range2.start),
-            to: (range1.end > range2.end ? range1.end : range2.end)
+            from: (range1.from < range2.from ? range1.from : range2.from),
+            to: (range1.to > range2.to ? range1.to : range2.to)
         };
     };
 
@@ -3711,14 +3711,13 @@ var AvailabilityStore = function AvailabilityStore() {
                                 from: store.periods[i].from,
                                 to: store.periods[i].to
                             }, {
-                                from: lastPeriod[i].from,
-                                to: lastPeriod[i].to
+                                from: lastPeriod.from,
+                                to: lastPeriod.to
                             });
 
                             var replacementPeriod = {
-                                from: newRange.start,
-                                to: newRange.end,
-                                range: newRange
+                                from: newRange.from,
+                                to: newRange.to
                             };
                             newPeriods[lastPeriodIndex] = replacementPeriod;
                         }
