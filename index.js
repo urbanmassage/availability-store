@@ -2,6 +2,12 @@ var moment = require('moment');
 var debug = require('debug')('availabilityStore');
 
 var rangesIntersect = function(r1, r2) {
+    if(!r1 || !r2) {
+        // one of the ranges are undefined??
+
+        return false;
+    }
+
     // check range1 is correct way around
     if(r1.from > r1.to) {
         var r1To = r1.from;
@@ -61,27 +67,35 @@ var AvailabilityStore = function AvailabilityStore() {
     this.setupFromCachedPeriods = function(cached) {
         this.periods = [];
         for(var i=0; i<cached.length; i++) {
-            if(this.firstAvailable > cached[i].from) {
-                this.firstAvailable = cached[i].from;
+            if(cached[i].from !== cached[i].to) {
+                // only add period if its start time doesn't equal its end time (i.e. it's at least 1 second long!)
+
+                if(this.firstAvailable > cached[i].from) {
+                    this.firstAvailable = cached[i].from;
+                }
+                if(this.lastAvailable < cached[i].to) {
+                    this.lastAvailable = cached[i].to;
+                }
+            
+                this.periods.push({
+                    from: cached[i].from,
+                    to: cached[i].to
+                });
             }
-            if(this.lastAvailable < cached[i].to) {
-                this.lastAvailable = cached[i].to;
-            }
-        
-            this.periods.push({
-                from: cached[i].from,
-                to: cached[i].to
-            });
         }
     };
 
     this.serialize = function() {
         var newPeriods = [];
         for(var i=0; i<store.periods.length; i++) {
-            newPeriods.push({
-                from: store.periods[i].from*1,
-                to: store.periods[i].to*1
-            });
+            if((store.periods[i].from*1) !== (store.periods[i].to*1)) {
+                // only add period if its start time doesn't equal its end time (i.e. it's at least 1 second long!)
+                
+                newPeriods.push({
+                    from: store.periods[i].from*1,
+                    to: store.periods[i].to*1
+                });
+            }
         }
         
         return newPeriods;
@@ -95,6 +109,11 @@ var AvailabilityStore = function AvailabilityStore() {
     };
 
     this.forceAvailableForPeriod = function(from, to) {
+        if(from === to) {
+            // don't add a period of 0 seconds
+            return;
+        }
+
         if(from > to) {
             // make sure from is before to
             var oldFrom = from;
@@ -194,6 +213,11 @@ var AvailabilityStore = function AvailabilityStore() {
     };
 
     this.markUnavailableForPeriod = function(from, to) {
+        if(from === to) {
+            // don't add a period of 0 seconds
+            return;
+        }
+
         var newPeriods = [];
         for(var i=0; i<store.periods.length; i++) {
             if(store.periods[i].from > to) {
