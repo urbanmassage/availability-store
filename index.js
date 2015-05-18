@@ -115,6 +115,8 @@ var AvailabilityStore = function AvailabilityStore() {
             return;
         }
 
+        debug('forceAvailableForPeriod', from, to);
+
         if(from > to) {
             // make sure from is before to
             var oldFrom = from;
@@ -176,6 +178,10 @@ var AvailabilityStore = function AvailabilityStore() {
                 var lastPeriodIndex = null;
                 for(var i=0; i<store.periods.length; i++) { 
                     if(lastPeriod != null) {
+                        if(typeof(store.periods[i]) === 'undefined') {
+                            console.log('undefined period about to call rangesIntersect', store.periods, i, from, to);
+                        }
+
                         if(rangesIntersect(lastPeriod, store.periods[i])) {
                             // lastPeriod is intersecting current period
                             var newRange = this.calculateRangeUnion({
