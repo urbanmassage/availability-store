@@ -4,6 +4,7 @@ var debug = require('debug')('availabilityStore');
 var rangesIntersect = function(r1, r2) {
     if(!r1 || !r2) {
         // one of the ranges are undefined??
+        console.log('availability-store range is undefined', r1, r2);
 
         return false;
     }
