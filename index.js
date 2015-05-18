@@ -181,28 +181,29 @@ var AvailabilityStore = function AvailabilityStore() {
                         if(typeof(store.periods[i]) === 'undefined') {
                             console.log('undefined period about to call rangesIntersect', store.periods, i, from, to);
                         }
+                        else {
+                            if(rangesIntersect(lastPeriod, store.periods[i])) {
+                                // lastPeriod is intersecting current period
+                                var newRange = this.calculateRangeUnion({
+                                    from: store.periods[i].from,
+                                    to: store.periods[i].to
+                                }, {
+                                    from: lastPeriod.from,
+                                    to: lastPeriod.to
+                                });
 
-                        if(rangesIntersect(lastPeriod, store.periods[i])) {
-                            // lastPeriod is intersecting current period
-                            var newRange = this.calculateRangeUnion({
-                                from: store.periods[i].from,
-                                to: store.periods[i].to
-                            }, {
-                                from: lastPeriod.from,
-                                to: lastPeriod.to
-                            });
-
-                            var replacementPeriod = {
-                                from: newRange.from,
-                                to: newRange.to
-                            };
-                            newPeriods[lastPeriodIndex] = replacementPeriod;
-                        }
-                        else { 
-                            // lastPeriod is not intersecting current period
-                            lastPeriod = store.periods[i];
-                            lastPeriodIndex = i;
-                            newPeriods.push(lastPeriod);
+                                var replacementPeriod = {
+                                    from: newRange.from,
+                                    to: newRange.to
+                                };
+                                newPeriods[lastPeriodIndex] = replacementPeriod;
+                            }
+                            else { 
+                                // lastPeriod is not intersecting current period
+                                lastPeriod = store.periods[i];
+                                lastPeriodIndex = i;
+                                newPeriods.push(lastPeriod);
+                            }
                         }
                     }
                     else {
