@@ -53,6 +53,13 @@ var AvailabilityStore = function AvailabilityStore() {
     
     var sortPeriods = function() {
         store.periods.sort(function(a, b) {
+            if(!a || !b) {
+                // one of the ranges are undefined??
+                console.log('availability-store sortPeriods range is undefined', a, b);
+
+                return 0;
+            }
+
             // there shouldn't be any overlap of periods at all as we sort that when we add / remove periods
             if(a.from > b.from) {
                 return 1;
@@ -89,6 +96,11 @@ var AvailabilityStore = function AvailabilityStore() {
     this.serialize = function() {
         var newPeriods = [];
         for(var i=0; i<store.periods.length; i++) {
+            if(!store.periods[i]) {
+                console.log('availability-store#serialize period is undefined', store.periods[i]);
+                continue;
+            }
+
             if((store.periods[i].from*1) !== (store.periods[i].to*1)) {
                 // only add period if its start time doesn't equal its end time (i.e. it's at least 1 second long!)
                 
