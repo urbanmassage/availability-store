@@ -1,7 +1,7 @@
 var expect = require('chai').expect;
-var rangesIntersect = require('../lib/ranges-intersect');
+var rangesIntersectInclusive = require('../lib/ranges-intersect-inclusive');
 
-describe('ranges-intersect', function() {
+describe('ranges-intersect-inclusive', function() {
 	var tests = [{
 		input1: {
 			from: 0,
@@ -34,6 +34,26 @@ describe('ranges-intersect', function() {
 		result: true
 	}, {
 		input1: {
+			from: 0,
+			to: 1
+		},
+		input2: {
+			from: 1,
+			to: 2
+		},
+		result: false
+	}, {
+		input1: {
+			from: 5,
+			to: 6
+		},
+		input2: {
+			from: 4,
+			to: 5
+		},
+		result: false
+	}, {
+		input1: {
 			from: 2,
 			to: 5
 		},
@@ -57,10 +77,9 @@ describe('ranges-intersect', function() {
 	for(var i=0; i<tests.length; i++) {
 		(function(test) {
 			it('should determine intersection='+test.result+' for ['+test.input1.from+'-'+test.input1.to+'] and ['+test.input2.from+'-'+test.input2.to+']', function() {
-				var result = rangesIntersect(test.input1, test.input2);
+				var result = rangesIntersectInclusive(test.input1, test.input2);
 
-				expect(result.from).to.equal(test.result.from);
-				expect(result.to).to.equal(test.result.to);
+				expect(result).to.equal(test.result);
 			});
 		})(tests[i]);
 	}
