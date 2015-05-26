@@ -43,9 +43,10 @@ var rangesIntersect = function(r1, r2) {
     return false;
 };
 
-var AvailabilityStore = function AvailabilityStore() {
+var AvailabilityStore = function AvailabilityStore(logInfo) {
     this.firstAvailable = 0;
     this.lastAvailable = 0;
+    this.logInfo = logInfo || '';
     
     var store = this;
 
@@ -55,7 +56,7 @@ var AvailabilityStore = function AvailabilityStore() {
         store.periods.sort(function(a, b) {
             if(!a || !b) {
                 // one of the ranges are undefined??
-                console.log('availability-store sortPeriods range is undefined', a, b);
+                console.log(store.logInfo, 'availability-store sortPeriods range is undefined', a, b);
 
                 return 0;
             }
@@ -97,7 +98,7 @@ var AvailabilityStore = function AvailabilityStore() {
         var newPeriods = [];
         for(var i=0; i<store.periods.length; i++) {
             if(!store.periods[i]) {
-                console.log('availability-store#serialize period is undefined', store.periods[i]);
+                console.log(store.logInfo, 'availability-store#serialize period is undefined', store.periods[i]);
                 continue;
             }
 
@@ -117,13 +118,13 @@ var AvailabilityStore = function AvailabilityStore() {
     this.calculateRangeUnion = function(range1, range2) {
         if(!range1) {
             // one of the ranges are undefined??
-            console.log('availability-store#calculateRangeUnion range1 is undefined', range1, range2);
+            console.log(store.logInfo, 'availability-store#calculateRangeUnion range1 is undefined', range1, range2);
 
             return range2;
         }
         if(!range2) {
             // one of the ranges are undefined??
-            console.log('availability-store#calculateRangeUnion range2 is undefined', range1, range2);
+            console.log(store.logInfo, 'availability-store#calculateRangeUnion range2 is undefined', range1, range2);
 
             return range1;
         }
@@ -204,7 +205,7 @@ var AvailabilityStore = function AvailabilityStore() {
                 for(var i=0; i<store.periods.length; i++) { 
                     if(lastPeriod != null) {
                         if(typeof(store.periods[i]) === 'undefined') {
-                            console.log('undefined period about to call rangesIntersect', store.periods, i, from, to);
+                            console.log(store.logInfo, 'undefined period about to call rangesIntersect', store.periods, i, from, to);
                         }
                         else {
                             if(rangesIntersect(lastPeriod, store.periods[i])) {
@@ -254,7 +255,7 @@ var AvailabilityStore = function AvailabilityStore() {
         var newPeriods = [];
         for(var i=0; i<store.periods.length; i++) {
             if(!store.periods[i]) {
-                console.log('availability-store#markUnavailableForPeriod period is undefined', store.periods[i]);
+                console.log(store.logInfo, 'availability-store#markUnavailableForPeriod period is undefined', store.periods[i]);
                 continue;
             }
 
@@ -352,7 +353,7 @@ var AvailabilityStore = function AvailabilityStore() {
         var newPeriods = [];
         for(var i=0; i<store.periods.length; i++) {
             if(!store.periods[i]) {
-                console.log('availability-store#markUnavailableBeforeTime period is undefined', store.periods[i]);
+                console.log(store.logInfo, 'availability-store#markUnavailableBeforeTime period is undefined', store.periods[i]);
                 continue;
             }
 
@@ -387,7 +388,7 @@ var AvailabilityStore = function AvailabilityStore() {
         // check to see if the known periods overlap the search period at all
         for(var i=0; i<store.periods.length; i++) {
             if(!store.periods[i]) {
-                console.log('availability-store#hasAvailabilityForPeriod period is undefined', store.periods[i]);
+                console.log(store.logInfo, 'availability-store#hasAvailabilityForPeriod period is undefined', store.periods[i]);
                 continue;
             }
 
@@ -418,7 +419,7 @@ var AvailabilityStore = function AvailabilityStore() {
             // falls within the general available times for the day, check each period
             for(var i=0; i<store.periods.length; i++) {
                 if(!store.periods[i]) {
-                    console.log('availability-store#isAvailableForPeriod period is undefined', store.periods[i]);
+                    console.log(store.logInfo, 'availability-store#isAvailableForPeriod period is undefined', store.periods[i]);
                     continue;
                 }
 
