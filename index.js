@@ -115,6 +115,19 @@ var AvailabilityStore = function AvailabilityStore() {
     };
 
     this.calculateRangeUnion = function(range1, range2) {
+        if(!range1) {
+            // one of the ranges are undefined??
+            console.log('availability-store#calculateRangeUnion range1 is undefined', range1, range2);
+
+            return range2;
+        }
+        if(!range2) {
+            // one of the ranges are undefined??
+            console.log('availability-store#calculateRangeUnion range2 is undefined', range1, range2);
+
+            return range1;
+        }
+
         return {
             from: (range1.from < range2.from ? range1.from : range2.from),
             to: (range1.to > range2.to ? range1.to : range2.to)
@@ -240,6 +253,11 @@ var AvailabilityStore = function AvailabilityStore() {
 
         var newPeriods = [];
         for(var i=0; i<store.periods.length; i++) {
+            if(!store.periods[i]) {
+                console.log('availability-store#markUnavailableForPeriod period is undefined', store.periods[i]);
+                continue;
+            }
+
             if(store.periods[i].from > to) {
                 //console.log('aSmUFP1', moment(store.periods[i].from, 'X').format("HH:mm"), moment(store.periods[i].to, 'X').format("HH:mm"), moment(from, 'X').format("HH:mm"), moment(to, 'X').format("HH:mm"));
                 // +  -----
@@ -333,6 +351,11 @@ var AvailabilityStore = function AvailabilityStore() {
         
         var newPeriods = [];
         for(var i=0; i<store.periods.length; i++) {
+            if(!store.periods[i]) {
+                console.log('availability-store#markUnavailableBeforeTime period is undefined', store.periods[i]);
+                continue;
+            }
+
             if(store.periods[i].to > time && store.periods[i].from < time) {
                 // part of period is after this time, change start of period
                 store.periods[i].from = time;
@@ -363,6 +386,11 @@ var AvailabilityStore = function AvailabilityStore() {
 
         // check to see if the known periods overlap the search period at all
         for(var i=0; i<store.periods.length; i++) {
+            if(!store.periods[i]) {
+                console.log('availability-store#hasAvailabilityForPeriod period is undefined', store.periods[i]);
+                continue;
+            }
+
             if(store.periods[i].from <= from && store.periods[i].to >= to) {
                 debug('YES1  hasAvailabilityForPeriod '+moment(from, 'X').format()+'-'+moment(to, 'X').format(), from, to);
                 return true;
@@ -389,6 +417,11 @@ var AvailabilityStore = function AvailabilityStore() {
         if(store.firstAvailable <= from && store.lastAvailable >= to) {
             // falls within the general available times for the day, check each period
             for(var i=0; i<store.periods.length; i++) {
+                if(!store.periods[i]) {
+                    console.log('availability-store#isAvailableForPeriod period is undefined', store.periods[i]);
+                    continue;
+                }
+
                 if(store.periods[i].from > to) {
                     // this period is past the time we're checking, stop (as store.periods is always ascending in time)
                     debug('NO1   isAvailableForPeriod '+moment(from, 'X').format()+'-'+moment(to, 'X').format(), from, to);
