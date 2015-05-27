@@ -78,6 +78,16 @@ describe('ranges-after-removing-range', function() {
             from: 10,
             to: 20
         }]
+    }, {
+        input: [{
+            from: 1432884600,
+            to: 1432890000
+        }],
+        remove: {
+            from: 1432884600,
+            to: 1432890000
+        },
+        results: []
     }];
 
     for(var i=0; i<tests.length; i++) {

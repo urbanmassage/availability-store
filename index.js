@@ -25,8 +25,8 @@ AvailabilityStore.prototype.setupFromCachedPeriods = function(cached) {
             // only add period if it's not empty
 
             store.periods.push({
-                from: cached[i].from,
-                to: cached[i].to
+                from: cached[i].from * 1,
+                to: cached[i].to * 1
             });
         }
     }
@@ -57,6 +57,9 @@ AvailabilityStore.prototype.serialize = function() {
 };
 
 AvailabilityStore.prototype.forceAvailableForPeriod = function(from, to) {
+    from = from * 1;
+    to = to * 1;
+
     if(rangeIsEmpty({ from: from, to: to })) {
         // ignore empty ranges
         return false;
@@ -73,6 +76,9 @@ AvailabilityStore.prototype.forceAvailableForPeriod = function(from, to) {
 };
 
 AvailabilityStore.prototype.markUnavailableForPeriod = function(from, to) {
+    from = from * 1;
+    to = to * 1;
+
     if(rangeIsEmpty({ from: from, to: to })) {
         // ignore empty ranges
         return false;
@@ -89,6 +95,8 @@ AvailabilityStore.prototype.markUnavailableForPeriod = function(from, to) {
 };
 
 AvailabilityStore.prototype.markUnavailableBeforeTime = function(time) {
+    time = time * 1;
+
     var store = this;
     
     store.firstAvailable = earliestInRanges(store.periods);
@@ -103,6 +111,9 @@ AvailabilityStore.prototype.markUnavailableBeforeTime = function(time) {
 };
 
 AvailabilityStore.prototype.hasAvailabilityForPeriod = function(from, to) {
+    from = from * 1;
+    to = to * 1;
+
     var store = this;
 
     return hasAvailabilityForRange(store.periods, {
@@ -112,6 +123,9 @@ AvailabilityStore.prototype.hasAvailabilityForPeriod = function(from, to) {
 };
 
 AvailabilityStore.prototype.isAvailableForPeriod = function(from, to) {
+    from = from * 1;
+    to = to * 1;
+
     var store = this;
 
     return isCompletelyAvailableForRange(store.periods, {

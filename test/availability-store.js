@@ -55,4 +55,24 @@ describe('availability-store', function() {
 
         expect(availabilityStore.periods.length).to.equal(2);
     });
+
+    it('should still serialize correctly', function() {
+        var result = availabilityStore.serialize();
+
+        expect(JSON.stringify(result)).to.equal('[{"from":10,"to":99},{"from":200,"to":350}]');
+    });
+
+    it('should contain one period after removing [10-99]', function() {
+        availabilityStore.markUnavailableForPeriod(10, 99);
+
+        expect(availabilityStore.periods.length).to.equal(1);
+    });
+
+    it('should work for string timestamps', function() {
+        var store = new AvailabilityStore();
+        store.forceAvailableForPeriod('1432884600', '1432890000');
+        store.markUnavailableForPeriod(1432884600, 1432890000);
+
+        expect(store.periods.length).to.equal(0);
+    });
 });
