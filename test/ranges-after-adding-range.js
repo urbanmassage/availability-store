@@ -81,6 +81,22 @@ describe('ranges-after-adding-range', function() {
             from: 1000,
             to: 10000
         }]
+    }, {
+        input: [{
+            from: 0,
+            to: 10
+        }, {
+            from: 20,
+            to: 30
+        }],
+        add: {
+            from: 5,
+            to: 25
+        },
+        results: [{
+            from: 0,
+            to: 30
+        }]
     }];
 
     for(var i=0; i<tests.length; i++) {
