@@ -62,6 +62,16 @@ describe('range-completely-contains-range', function() {
             to: 14
         },
         result: true
+    }, {
+        input1: {
+            from: 5,
+            to: 10
+        },
+        input2: {
+            from: 5,
+            to: 10
+        },
+        result: true
     }];
 
     for(var i=0; i<tests.length; i++) {
