@@ -1,6 +1,7 @@
+import IPeriod from '../period';
 import sanitizeRange = require('./sanitize-range');
 
-function rangeIsEmpty(range) {
+function rangeIsEmpty(range: IPeriod): boolean {
   // flip the range if necessary
   sanitizeRange(range);
 

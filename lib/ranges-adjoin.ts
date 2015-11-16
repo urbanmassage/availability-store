@@ -1,9 +1,10 @@
+import IPeriod from '../period';
 import sanitizeRange = require('./sanitize-range');
 import rangeIsEmpty = require('./range-is-empty');
 
 var debug = require('debug')('availability-store:ranges-adjoin');
 
-function rangesAdjoin(r1, r2) {
+function rangesAdjoin(r1: IPeriod, r2: IPeriod): boolean {
   // flip the ranges if necessary
   sanitizeRange(r1);
   sanitizeRange(r2);

@@ -1,3 +1,4 @@
+import IPeriod from '../period';
 import sanitizeRange = require('./sanitize-range');
 import rangeIsEmpty = require('./range-is-empty');
 import sortRanges = require('./sort-ranges');
@@ -10,7 +11,7 @@ import rangesAdjoin = require('./ranges-adjoin');
 const debug = require('debug')('availability-store:ranges-after-adding-range');
 
 // this method removes a range from a set of ranges
-function rangesAfterAddingRange(ranges, rangeToAdd) {
+function rangesAfterAddingRange(ranges: IPeriod[], rangeToAdd: IPeriod): IPeriod[] {
   sanitizeRange(rangeToAdd);
 
   // if rangeToAdd is empty, no need to process ranges
@@ -23,7 +24,7 @@ function rangesAfterAddingRange(ranges, rangeToAdd) {
     return [rangeToAdd];
   }
 
-  var earliest = earliestInRanges(ranges);
+  const earliest = earliestInRanges(ranges);
   if (rangeToAdd.to < earliest) {
     // rangeToRemove is before all ranges passed in
     // just pop the range in and re sort
@@ -35,7 +36,7 @@ function rangesAfterAddingRange(ranges, rangeToAdd) {
     return ranges;
   }
 
-  var latest = latestInRanges(ranges);
+  const latest = latestInRanges(ranges);
   if (rangeToAdd.from > latest) {
     // rangeToAdd is after all ranges passed in
     // just pop the range in and re sort
@@ -48,8 +49,8 @@ function rangesAfterAddingRange(ranges, rangeToAdd) {
   }
 
   // it looks like we need to process the ranges if we hit here
-  var output = [],
-    added = false;
+  const output: IPeriod[] = [];
+  let added: boolean = false;
 
   for (var i = 0; i < ranges.length; i++) {
     if (!rangesIntersectInclusive(ranges[i], rangeToAdd) && !rangesAdjoin(ranges[i], rangeToAdd)) {

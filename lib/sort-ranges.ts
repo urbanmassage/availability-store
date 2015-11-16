@@ -1,6 +1,7 @@
+import IPeriod from '../period';
 import sanitizeRange = require('./sanitize-range');
 
-function sortRanges(ranges) {
+function sortRanges(ranges: IPeriod[]): void {
   for (let i = 0; i < ranges.length; i++) {
     sanitizeRange(ranges[i]);
   }
@@ -9,9 +10,7 @@ function sortRanges(ranges) {
     if (a.from > b.from) {
       return 1;
     }
-    else {
-      return -1;
-    }
+    return -1;
   });
 };
 

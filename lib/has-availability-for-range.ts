@@ -1,8 +1,11 @@
+import IPeriod from '../period';
 import sanitizeRange = require('./sanitize-range');
 import rangesIntersectInclusive = require('./ranges-intersect-inclusive');
 
-// this method checks if the searchRange overlaps any of the specified ranges
-function hasAvailabilityForRange(ranges, searchRange) {
+/**
+ * check if the searchRange overlaps any of the specified ranges
+ */
+function hasAvailabilityForRange(ranges: IPeriod[], searchRange: IPeriod): boolean {
   // if ranges is empty, it cannot contain the searchRange
   if (ranges.length === 0) {
     return false;

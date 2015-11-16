@@ -1,3 +1,4 @@
+import IPeriod from '../period';
 import sanitizeRange = require('./sanitize-range');
 import rangeIsEmpty = require('./range-is-empty');
 import earliestInRanges = require('./earliest-in-ranges');
@@ -8,7 +9,7 @@ import sortRanges = require('./sort-ranges');
 const debug = require('debug')('availability-store:ranges-after-removing-range');
 
 // this method removes a range from a set of ranges
-function rangesAfterRemovingRange(ranges, rangeToRemove) {
+function rangesAfterRemovingRange(ranges: IPeriod[], rangeToRemove: IPeriod): IPeriod[] {
   // if ranges is empty, it cannot contain the rangeToRemove
   if (ranges.length === 0) {
     return ranges;
@@ -44,7 +45,7 @@ function rangesAfterRemovingRange(ranges, rangeToRemove) {
   }
 
   // if we hit here then rangeToRemove must overlap the passed ranges in some way
-  const output = [];
+  const output: IPeriod[] = [];
 
   for (let i = 0; i < ranges.length; i++) {
     if (!rangesIntersectInclusive(ranges[i], rangeToRemove)) {

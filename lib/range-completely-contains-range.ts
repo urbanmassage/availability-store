@@ -1,10 +1,11 @@
+import IPeriod from '../period';
 import sanitizeRange = require('./sanitize-range');
 import rangeIsEmpty = require('./range-is-empty');
 
 const debug = require('debug')('availability-store:range-completely-contains-range');
 
 // TODO!
-function rangeCompletelyContainsRange(outerRange, innerRange) {
+function rangeCompletelyContainsRange(outerRange: IPeriod, innerRange: IPeriod): boolean {
   // flip the ranges if necessary
   sanitizeRange(outerRange);
   sanitizeRange(innerRange);

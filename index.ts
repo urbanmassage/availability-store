@@ -10,13 +10,8 @@ import latestInRanges = require('./lib/latest-in-ranges');
 import rangesAfterRemovingRange = require('./lib/ranges-after-removing-range');
 import rangesAfterAddingRange = require('./lib/ranges-after-adding-range');
 
-interface IPeriod {
-  from: number;
-  to: number;
-}
-
 class AvailabilityStore {
-  periods: IPeriod[];
+  periods: AvailabilityStore.IPeriod[];
   firstAvailable: number;
   lastAvailable: number;
 
@@ -30,7 +25,7 @@ class AvailabilityStore {
     this.periods = [];
   }
 
-  setupFromCachedPeriods(cached: IPeriod[]) {
+  setupFromCachedPeriods(cached: AvailabilityStore.IPeriod[]) {
     this.periods = [];
     for (var i = 0; i < cached.length; i++) {
       if (rangeIsEmpty(cached[i]) !== true) {
@@ -154,6 +149,13 @@ class AvailabilityStore {
   release() {
     AvailabilityStore.pool.release(this);
   }
+}
+
+module AvailabilityStore {
+  export interface IPeriod {
+    from: number;
+    to: number;
+  };
 }
 
 export = AvailabilityStore;

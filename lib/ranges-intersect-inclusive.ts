@@ -1,10 +1,11 @@
+import IPeriod from '../period';
 import sanitizeRange = require('./sanitize-range');
 import rangeIsEmpty = require('./range-is-empty');
 import rangeCompletelyContainsRange = require('./range-completely-contains-range');
 
 const debug = require('debug')('availability-store:ranges-intersect-inclusive');
 
-function rangesIntersectInclusive(r1, r2) {
+function rangesIntersectInclusive(r1: IPeriod, r2: IPeriod): boolean {
   // flip the ranges if necessary
   sanitizeRange(r1);
   sanitizeRange(r2);

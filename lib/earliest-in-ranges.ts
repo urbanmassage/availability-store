@@ -1,9 +1,12 @@
+import IPeriod from '../period';
 import sortRanges = require('./sort-ranges');
 
-const DEFAULT_EARLIEST = 0;
+const DEFAULT_EARLIEST: number = 0;
 
-// this method removes a range from a set of ranges
-function earliestInRanges(ranges) {
+/**
+ * Removes a range from a set of ranges
+ */
+function earliestInRanges(ranges: IPeriod[]): number {
   // if ranges is empty, simply return the new range
   if (ranges.length === 0) {
     return DEFAULT_EARLIEST;

@@ -1,6 +1,7 @@
+import IPeriod from '../period';
 import sanitizeRange = require('./sanitize-range');
 
-function calculateRangeUnion(range1, range2) {
+function calculateRangeUnion(range1: IPeriod, range2: IPeriod): IPeriod {
   // flip the ranges if necessary
   sanitizeRange(range1);
   sanitizeRange(range2);

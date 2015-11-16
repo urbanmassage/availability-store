@@ -1,11 +1,14 @@
+import IPeriod from '../period';
 import sanitizeRange = require('./sanitize-range');
 import rangeCompletelyContainsRange = require('./range-completely-contains-range');
 import rangeIsEmpty = require('./range-is-empty');
 
 const debug = require('debug')('availability-store:is-completely-available-for-range');
 
-// this method checks if the searchRange is completely contained within any of the ranges
-function isCompletelyAvailableForRange(ranges, searchRange) {
+/**
+ * check if the searchRange is completely contained within any of the ranges
+ */
+function isCompletelyAvailableForRange(ranges: IPeriod[], searchRange: IPeriod): boolean {
   // if ranges is empty, it cannot contain the searchRange
   if (ranges.length === 0) {
     return false;
