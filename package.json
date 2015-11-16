@@ -2,20 +2,26 @@
   "name": "availability-store",
   "version": "4.0.3",
   "description": "",
-  "main": "index.js",
+  "main": "index",
   "scripts": {
+    "build": "tsc -p .",
     "start": "./node_modules/.bin/browserify -r ./index.js:availability-store > browser/availabilityStore.js",
+    "lint": "tslint *.ts **/*.ts",
+    "pretest": "npm run build",
     "test": "mocha"
   },
   "author": "",
   "license": "ISC",
   "dependencies": {
     "debug": "^2.1.2",
-    "moment": "^2.9.0"
+    "moment": "^2.9.0",
+    "opool": "0.0.3"
   },
   "devDependencies": {
     "browserify": "^9.0.3",
     "chai": "^2.3.0",
-    "mocha": "^2.2.5"
+    "mocha": "^2.2.5",
+    "tslint": "^2.5.1",
+    "typescript": "^1.6.2"
   }
 }
