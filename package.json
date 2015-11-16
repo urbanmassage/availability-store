@@ -15,7 +15,7 @@
   "dependencies": {
     "debug": "^2.1.2",
     "moment": "^2.9.0",
-    "opool": "0.0.3"
+    "opool": "0.0.4"
   },
   "devDependencies": {
     "browserify": "^9.0.3",
