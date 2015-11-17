@@ -16,13 +16,13 @@ class AvailabilityStore {
   lastAvailable: number;
 
   constructor() {
-    this.reset();
+    AvailabilityStore.reset(this);
   }
 
-  reset() {
-    this.firstAvailable = 0;
-    this.lastAvailable = 0;
-    this.periods = [];
+  static reset(obj: AvailabilityStore) {
+    obj.firstAvailable = 0;
+    obj.lastAvailable = 0;
+    obj.periods = [];
   }
 
   setupFromCachedPeriods(cached: AvailabilityStore.IPeriod[]) {
@@ -146,8 +146,12 @@ class AvailabilityStore {
   static get() {
     return AvailabilityStore.pool.get();
   }
+  static release(obj: AvailabilityStore) {
+    AvailabilityStore.pool.release(obj);
+  }
+
   release() {
-    AvailabilityStore.pool.release(this);
+    AvailabilityStore.release(this);
   }
 }
 
