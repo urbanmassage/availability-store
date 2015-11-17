@@ -13,13 +13,13 @@ var rangesAfterRemovingRange = require('./lib/ranges-after-removing-range');
 var rangesAfterAddingRange = require('./lib/ranges-after-adding-range');
 
 var AvailabilityStore = function AvailabilityStore(logInfo) {
-    this.reset();
+    AvailabilityStore.reset(this);
 };
 
-AvailabilityStore.prototype.reset = function reset() {
-    this.firstAvailable = 0;
-    this.lastAvailable = 0;
-    this.periods = [];
+AvailabilityStore.reset = function reset(obj) {
+    obj.firstAvailable = 0;
+    obj.lastAvailable = 0;
+    obj.periods = [];
 };
 
 AvailabilityStore.prototype.setupFromCachedPeriods = function(cached) {
