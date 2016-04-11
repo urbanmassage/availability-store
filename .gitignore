@@ -1,2 +1,9 @@
+**/.DS_Store
 node_modules/
-npm-debug.log
+coverage/
+**.js
+**.map
+**.log
+index.d.ts
+**.d.ts
+!typings/**.d.ts
