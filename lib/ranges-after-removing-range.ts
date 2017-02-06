@@ -1,60 +1,56 @@
-import IPeriod from '../period';
+import {IPeriod, IAvailabilityStore} from '../contracts';
 import sanitizeRange = require('./sanitize-range');
 import rangeIsEmpty = require('./range-is-empty');
-import earliestInRanges = require('./earliest-in-ranges');
-import latestInRanges = require('./latest-in-ranges');
 import rangesIntersectInclusive = require('./ranges-intersect-inclusive');
 import sortRanges = require('./sort-ranges');
 
 const debug = require('debug')('availability-store:ranges-after-removing-range');
 
 // this method removes a range from a set of ranges
-function rangesAfterRemovingRange(ranges: IPeriod[], rangeToRemove: IPeriod): IPeriod[] {
+function rangesAfterRemovingRange(availabilityStore: IAvailabilityStore, rangeToRemove: IPeriod): void {
   // if ranges is empty, it cannot contain the rangeToRemove
-  if (ranges.length === 0) {
-    return ranges;
+  if (availabilityStore.periods.length === 0) {
+    return;
   }
 
   // if rangeToRemove is empty, no need to process ranges
   if (rangeIsEmpty(rangeToRemove)) {
     debug('rangeIsEmpty(rangeToRemove)', rangeToRemove);
 
-    return ranges;
+    return;
   }
 
   sanitizeRange(rangeToRemove);
 
-  const earliest = earliestInRanges(ranges);
-  if (rangeToRemove.to < earliest) {
+  if (rangeToRemove.to < availabilityStore.firstAvailable) {
     // rangeToRemove is before all ranges passed in
     // do nothing!
 
-    debug('rangeToRemove.to < earliest', ranges, rangeToRemove);
+    debug('rangeToRemove.to < earliest', availabilityStore.periods, rangeToRemove);
 
-    return ranges;
+    return;
   }
 
-  const latest = latestInRanges(ranges);
-  if (rangeToRemove.from > latest) {
+  if (rangeToRemove.from > availabilityStore.lastAvailable) {
     // rangeToRemove is after all ranges passed in
     // do nothing!
 
-    debug('rangeToRemove.from > latest', ranges, rangeToRemove);
+    debug('rangeToRemove.from > latest', availabilityStore.periods, rangeToRemove);
 
-    return ranges;
+    return;
   }
 
   // if we hit here then rangeToRemove must overlap the passed ranges in some way
   const output: IPeriod[] = [];
 
-  for (let i = 0; i < ranges.length; i++) {
-    if (!rangesIntersectInclusive(ranges[i], rangeToRemove)) {
+  availabilityStore.periods.forEach(range => {
+    if (!rangesIntersectInclusive(range, rangeToRemove)) {
       // rangeToRemove isn't within this range, skip
-      output.push(ranges[i]);
+      output.push(range);
     } else {
       // if we hit here, ranges[i] must intersect rangeToRemove
 
-      if (rangeToRemove.from <= ranges[i].from && rangeToRemove.to >= ranges[i].to) {
+      if (rangeToRemove.from <= range.from && rangeToRemove.to >= range.to) {
         // +   --------
         // -  ----------
         // =
@@ -64,20 +60,20 @@ function rangesAfterRemovingRange(ranges: IPeriod[], rangeToRemove: IPeriod): IP
         // -   --------
         // =
         // exactly covers period, drop period
-      } else if (rangeToRemove.from > ranges[i].from && rangeToRemove.from < ranges[i].to && rangeToRemove.to > ranges[i].to) {
+      } else if (rangeToRemove.from > range.from && rangeToRemove.from < range.to && rangeToRemove.to > range.to) {
         // +  -----
         // -     -----
         // =  ---
 
-        ranges[i].to = rangeToRemove.from;
-        output.push(ranges[i]);
-      } else if (rangeToRemove.from < ranges[i].from && rangeToRemove.to > ranges[i].from && rangeToRemove.to < ranges[i].to) {
+        range.to = rangeToRemove.from;
+        output.push(range);
+      } else if (rangeToRemove.from < range.from && rangeToRemove.to > range.from && rangeToRemove.to < range.to) {
         // +     -----
         // -  -----
         // =       ---
 
-        ranges[i].from = rangeToRemove.to;
-        output.push(ranges[i]);
+        range.from = rangeToRemove.to;
+        output.push(range);
       } else {
         // rangeToRemove is completely within ranges[i]
         // +   -----------------
@@ -86,12 +82,12 @@ function rangesAfterRemovingRange(ranges: IPeriod[], rangeToRemove: IPeriod): IP
         // =         -----------
 
         const firstPartOfSplit = {
-          from: ranges[i].from,
+          from: range.from,
           to: rangeToRemove.from
         };
         const secondPartOfSplit = {
           from: rangeToRemove.to,
-          to: ranges[i].to
+          to: range.to
         };
 
         if (!rangeIsEmpty(firstPartOfSplit)) {
@@ -102,11 +98,10 @@ function rangesAfterRemovingRange(ranges: IPeriod[], rangeToRemove: IPeriod): IP
         }
       }
     }
-  }
+  });
+  availabilityStore.periods = output;
 
-  sortRanges(output);
-
-  return output;
+  return sortRanges(availabilityStore);
 };
 
 export = rangesAfterRemovingRange;

@@ -1,67 +1,62 @@
-import IPeriod from '../period';
+import {IPeriod, IAvailabilityStore} from '../contracts';
 import sanitizeRange = require('./sanitize-range');
 import rangeIsEmpty = require('./range-is-empty');
 import sortRanges = require('./sort-ranges');
 import rangesIntersectInclusive = require('./ranges-intersect-inclusive');
 import calculateRangeUnion = require('./range-union');
-import earliestInRanges = require('./earliest-in-ranges');
-import latestInRanges = require('./latest-in-ranges');
 import rangesAdjoin = require('./ranges-adjoin');
 
 const debug = require('debug')('availability-store:ranges-after-adding-range');
 
 // this method removes a range from a set of ranges
-function rangesAfterAddingRange(ranges: IPeriod[], rangeToAdd: IPeriod): IPeriod[] {
+function rangesAfterAddingRange(availabilityStore:IAvailabilityStore, rangeToAdd: IPeriod): void {
   sanitizeRange(rangeToAdd);
 
   // if rangeToAdd is empty, no need to process ranges
   if (rangeIsEmpty(rangeToAdd)) {
-    return ranges;
+    return;
   }
 
   // if ranges is empty, simply return the new range
-  if (ranges.length === 0) {
-    return [rangeToAdd];
+  if (availabilityStore.periods.length === 0) {
+    availabilityStore.periods = [rangeToAdd];
+    return sortRanges(availabilityStore);
   }
 
-  const earliest = earliestInRanges(ranges);
-  if (rangeToAdd.to < earliest) {
+  if (rangeToAdd.to < availabilityStore.firstAvailable) {
     // rangeToRemove is before all ranges passed in
-    // just pop the range in and re sort
+    // just unshift the range in and re sort
 
-    debug('rangeToAdd.to < earliest', ranges, rangeToAdd);
+    debug('rangeToAdd.to < earliest', availabilityStore.periods, rangeToAdd);
 
-    ranges.push(rangeToAdd);
-    sortRanges(ranges);
-    return ranges;
+    availabilityStore.periods.unshift(rangeToAdd);
+    return sortRanges(availabilityStore);
   }
 
-  const latest = latestInRanges(ranges);
-  if (rangeToAdd.from > latest) {
+  if (rangeToAdd.from > availabilityStore.lastAvailable) {
     // rangeToAdd is after all ranges passed in
-    // just pop the range in and re sort
+    // just push the range in and re sort
 
-    debug('rangeToAdd.from > latest', ranges, rangeToAdd);
+    debug('rangeToAdd.from > latest', availabilityStore.periods, rangeToAdd);
 
-    ranges.push(rangeToAdd);
-    sortRanges(ranges);
-    return ranges;
+    availabilityStore.periods.push(rangeToAdd);
+    return sortRanges(availabilityStore);
   }
 
   // it looks like we need to process the ranges if we hit here
   const output: IPeriod[] = [];
   let added: boolean = false;
 
-  for (var i = 0; i < ranges.length; i++) {
-    if (!rangesIntersectInclusive(ranges[i], rangeToAdd) && !rangesAdjoin(ranges[i], rangeToAdd)) {
-      if (!added && rangeToAdd.to < ranges[i].from) {
+  availabilityStore.periods.forEach(range => {
+    if (!rangesIntersectInclusive(range, rangeToAdd) && !rangesAdjoin(range, rangeToAdd)) {
+      if (!added && rangeToAdd.to < range.from) {
         // should be exactly before this one.
         output.push(rangeToAdd);
         added = true;
       }
 
       // ranges[i] doesn't overlap rangeToAdd, just pop it back in output
-      output.push(ranges[i]);
+      output.push(range);
     } else {
       // merge multiple ranges...
       if (added) {
@@ -69,19 +64,20 @@ function rangesAfterAddingRange(ranges: IPeriod[], rangeToAdd: IPeriod): IPeriod
       }
 
       // the ranges overlap, calculate the range union
-      var union = calculateRangeUnion(ranges[i], rangeToAdd);
+      var union = calculateRangeUnion(range, rangeToAdd);
 
       output.push(union);
       added = true;
     }
-  }
+  });
+  availabilityStore.periods = output;
 
   if (!added) {
     // We should never reach this point.
     throw Error('Unexpected error in AvailabilityStore#rangesAfterAddingRange.');
   }
 
-  return output;
+  return sortRanges(availabilityStore);
 }
 
 export = rangesAfterAddingRange;
