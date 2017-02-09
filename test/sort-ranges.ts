@@ -1,5 +1,5 @@
 import {expect} from 'chai';
-import sortRanges = require('../lib/sort-ranges');
+import sortRangesOnStore = require('../lib/sort-ranges');
 import {IAvailabilityStore} from '../contracts';
 
 function isSortedCorrectly(ranges) {
@@ -55,7 +55,7 @@ describe('sort-ranges', function() {
         rangesDescParts.push(test.periods[i].from + '-' + test.periods[i].to);
       }
       it('should sort ranges [' + rangesDescParts.join('],[') + ']', function() {
-        sortRanges(test);
+        sortRangesOnStore(test);
 
         expect(isSortedCorrectly(test.periods)).to.equal(true);
 
@@ -120,7 +120,7 @@ describe('latest-in-ranges', function () {
         rangesDescParts.push(test.periods[i].from + '-' + test.periods[i].to);
       }
       it('should return ' + test.result + ' for ranges=[' + rangesDescParts.join('],[') + ']', function () {
-        sortRanges(test);
+        sortRangesOnStore(test);
 
         expect(test.lastAvailable).to.equal(test.result);
       });
@@ -180,7 +180,7 @@ describe('earliest-in-ranges', function() {
         rangesDescParts.push(test.periods[i].from + '-' + test.periods[i].to);
       }
       it('should return ' + test.result + ' for ranges=[' + rangesDescParts.join('],[') + ']', function() {
-        sortRanges(test);
+        sortRangesOnStore(test);
 
         expect(test.firstAvailable).to.equal(test.result);
       });

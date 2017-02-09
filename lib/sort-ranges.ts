@@ -4,7 +4,7 @@ const DEFAULT_EARLIEST: number = 0;
 const DEFAULT_LATEST = 0;
 
 
-function sortRanges(availabilityStore: IAvailabilityStore): void {
+function sortRangesOnStore(availabilityStore: IAvailabilityStore): void {
   availabilityStore.periods = availabilityStore.periods
     .filter(p => !!p && p.from !== p.to)
     .map(p => {
@@ -29,4 +29,4 @@ function sortRanges(availabilityStore: IAvailabilityStore): void {
     }
 };
 
-export = sortRanges;
+export = sortRangesOnStore;

@@ -2,12 +2,12 @@ import {IPeriod, IAvailabilityStore} from '../contracts';
 import sanitizeRange = require('./sanitize-range');
 import rangeIsEmpty = require('./range-is-empty');
 import rangesIntersectInclusive = require('./ranges-intersect-inclusive');
-import sortRanges = require('./sort-ranges');
+import sortRangesOnStore = require('./sort-ranges');
 
-const debug = require('debug')('availability-store:ranges-after-removing-range');
+const debug = require('debug')('availability-store:remove-range-from-store');
 
 // this method removes a range from a set of ranges
-function rangesAfterRemovingRange(availabilityStore: IAvailabilityStore, rangeToRemove: IPeriod): void {
+function removeRangeFromStore(availabilityStore: IAvailabilityStore, rangeToRemove: IPeriod): void {
   // if ranges is empty, it cannot contain the rangeToRemove
   if (availabilityStore.periods.length === 0) {
     return;
@@ -101,7 +101,7 @@ function rangesAfterRemovingRange(availabilityStore: IAvailabilityStore, rangeTo
   });
   availabilityStore.periods = output;
 
-  return sortRanges(availabilityStore);
+  return sortRangesOnStore(availabilityStore);
 };
 
-export = rangesAfterRemovingRange;
+export = removeRangeFromStore;

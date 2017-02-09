@@ -1,8 +1,8 @@
 import {expect} from 'chai';
-import sortRanges = require('../lib/sort-ranges');
-import rangesAfterAddingRange = require('../lib/ranges-after-adding-range');
+import sortRangesOnStore = require('../lib/sort-ranges');
+import addRangeToStore = require('../lib/add-range-to-store');
 
-describe('ranges-after-adding-range', function() {
+describe('add-range-to-store', function() {
   var tests = [{
     input: [{
       from: 0,
@@ -109,8 +109,8 @@ describe('ranges-after-adding-range', function() {
         firstAvailable: -1,
         lastAvailable: -1,
       }
-      sortRanges(availabilityStore); // set firstAvailable & lastAvailable
-      rangesAfterAddingRange(availabilityStore, test.add);
+      sortRangesOnStore(availabilityStore); // set firstAvailable & lastAvailable
+      addRangeToStore(availabilityStore, test.add);
 
       expect(availabilityStore.periods.length).to.equal(test.results.length);
       expect(JSON.stringify(availabilityStore.periods)).to.equal(expectedStringified);

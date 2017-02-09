@@ -1,15 +1,15 @@
 import {IPeriod, IAvailabilityStore} from '../contracts';
 import sanitizeRange = require('./sanitize-range');
 import rangeIsEmpty = require('./range-is-empty');
-import sortRanges = require('./sort-ranges');
+import sortRangesOnStore = require('./sort-ranges');
 import rangesIntersectInclusive = require('./ranges-intersect-inclusive');
 import calculateRangeUnion = require('./range-union');
 import rangesAdjoin = require('./ranges-adjoin');
 
-const debug = require('debug')('availability-store:ranges-after-adding-range');
+const debug = require('debug')('availability-store:add-range-to-store');
 
 // this method removes a range from a set of ranges
-function rangesAfterAddingRange(availabilityStore:IAvailabilityStore, rangeToAdd: IPeriod): void {
+function addRangeToStore(availabilityStore:IAvailabilityStore, rangeToAdd: IPeriod): void {
   sanitizeRange(rangeToAdd);
 
   // if rangeToAdd is empty, no need to process ranges
@@ -20,7 +20,7 @@ function rangesAfterAddingRange(availabilityStore:IAvailabilityStore, rangeToAdd
   // if ranges is empty, simply return the new range
   if (availabilityStore.periods.length === 0) {
     availabilityStore.periods = [rangeToAdd];
-    return sortRanges(availabilityStore);
+    return sortRangesOnStore(availabilityStore);
   }
 
   if (rangeToAdd.to < availabilityStore.firstAvailable) {
@@ -30,7 +30,7 @@ function rangesAfterAddingRange(availabilityStore:IAvailabilityStore, rangeToAdd
     debug('rangeToAdd.to < earliest', availabilityStore.periods, rangeToAdd);
 
     availabilityStore.periods.unshift(rangeToAdd);
-    return sortRanges(availabilityStore);
+    return sortRangesOnStore(availabilityStore);
   }
 
   if (rangeToAdd.from > availabilityStore.lastAvailable) {
@@ -40,7 +40,7 @@ function rangesAfterAddingRange(availabilityStore:IAvailabilityStore, rangeToAdd
     debug('rangeToAdd.from > latest', availabilityStore.periods, rangeToAdd);
 
     availabilityStore.periods.push(rangeToAdd);
-    return sortRanges(availabilityStore);
+    return sortRangesOnStore(availabilityStore);
   }
 
   // it looks like we need to process the ranges if we hit here
@@ -74,10 +74,10 @@ function rangesAfterAddingRange(availabilityStore:IAvailabilityStore, rangeToAdd
 
   if (!added) {
     // We should never reach this point.
-    throw Error('Unexpected error in AvailabilityStore#rangesAfterAddingRange.');
+    throw Error('Unexpected error in AvailabilityStore#addRangeToStore.');
   }
 
-  return sortRanges(availabilityStore);
+  return sortRangesOnStore(availabilityStore);
 }
 
-export = rangesAfterAddingRange;
+export = addRangeToStore;

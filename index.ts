@@ -1,12 +1,12 @@
 import Pool = require('opool');
 
 // import rangesIntersectInclusive = require('./lib/ranges-intersect-inclusive');
-import sortRanges = require('./lib/sort-ranges');
+import sortRangesOnStore = require('./lib/sort-ranges');
 import rangeIsEmpty = require('./lib/range-is-empty');
 import hasAvailabilityForRange = require('./lib/has-availability-for-range');
 import isCompletelyAvailableForRange = require('./lib/is-completely-available-for-range');
-import rangesAfterRemovingRange = require('./lib/ranges-after-removing-range');
-import rangesAfterAddingRange = require('./lib/ranges-after-adding-range');
+import removeRangeFromStore = require('./lib/remove-range-from-store');
+import addRangeToStore = require('./lib/add-range-to-store');
 
 class AvailabilityStore {
   periods: AvailabilityStore.IPeriod[];
@@ -35,11 +35,11 @@ class AvailabilityStore {
         });
       }
     }
-    sortRanges(this);
+    sortRangesOnStore(this);
   }
 
   serialize() {
-    sortRanges(this);
+    sortRangesOnStore(this);
     var newPeriods = [];
     for (var i = 0; i < this.periods.length; i++) {
       if (rangeIsEmpty(this.periods[i]) !== true) {
@@ -61,7 +61,7 @@ class AvailabilityStore {
     from = from * 1;
     to = to * 1;
 
-    rangesAfterAddingRange(this, {
+    addRangeToStore(this, {
       from: from,
       to: to
     });
@@ -73,7 +73,7 @@ class AvailabilityStore {
     from = from * 1;
     to = to * 1;
 
-    rangesAfterRemovingRange(this, {
+    removeRangeFromStore(this, {
       from: from,
       to: to
     });
@@ -84,7 +84,7 @@ class AvailabilityStore {
   markUnavailableBeforeTime(time) {
     time = time * 1;
 
-    rangesAfterRemovingRange(this, {
+    removeRangeFromStore(this, {
       from: this.firstAvailable,
       to: time
     });
