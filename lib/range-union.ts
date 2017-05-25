@@ -1,4 +1,4 @@
-import IPeriod from '../period';
+import {IPeriod} from '../contracts';
 import sanitizeRange = require('./sanitize-range');
 
 function calculateRangeUnion(range1: IPeriod, range2: IPeriod): IPeriod {

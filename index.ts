@@ -1,14 +1,12 @@
 import Pool = require('opool');
 
 // import rangesIntersectInclusive = require('./lib/ranges-intersect-inclusive');
-import sortRanges = require('./lib/sort-ranges');
+import sortRangesOnStore = require('./lib/sort-ranges');
 import rangeIsEmpty = require('./lib/range-is-empty');
 import hasAvailabilityForRange = require('./lib/has-availability-for-range');
 import isCompletelyAvailableForRange = require('./lib/is-completely-available-for-range');
-import earliestInRanges = require('./lib/earliest-in-ranges');
-import latestInRanges = require('./lib/latest-in-ranges');
-import rangesAfterRemovingRange = require('./lib/ranges-after-removing-range');
-import rangesAfterAddingRange = require('./lib/ranges-after-adding-range');
+import removeRangeFromStore = require('./lib/remove-range-from-store');
+import addRangeToStore = require('./lib/add-range-to-store');
 
 class AvailabilityStore {
   periods: AvailabilityStore.IPeriod[];
@@ -37,15 +35,11 @@ class AvailabilityStore {
         });
       }
     }
-
-    sortRanges(this.periods);
-    this.firstAvailable = earliestInRanges(this.periods);
-    this.lastAvailable = latestInRanges(this.periods);
+    sortRangesOnStore(this);
   }
 
   serialize() {
-    sortRanges(this.periods);
-
+    sortRangesOnStore(this);
     var newPeriods = [];
     for (var i = 0; i < this.periods.length; i++) {
       if (rangeIsEmpty(this.periods[i]) !== true) {
@@ -67,18 +61,10 @@ class AvailabilityStore {
     from = from * 1;
     to = to * 1;
 
-    if (rangeIsEmpty({ from: from, to: to })) {
-      // ignore empty ranges
-      return false;
-    }
-
-    this.periods = rangesAfterAddingRange(this.periods, {
+    addRangeToStore(this, {
       from: from,
       to: to
     });
-
-    this.firstAvailable = earliestInRanges(this.periods);
-    this.lastAvailable = latestInRanges(this.periods);
   }
 
   markUnavailableForPeriod(from: string, to: string);
@@ -87,18 +73,10 @@ class AvailabilityStore {
     from = from * 1;
     to = to * 1;
 
-    if (rangeIsEmpty({ from: from, to: to })) {
-      // ignore empty ranges
-      return false;
-    }
-
-    this.periods = rangesAfterRemovingRange(this.periods, {
+    removeRangeFromStore(this, {
       from: from,
       to: to
     });
-
-    this.firstAvailable = earliestInRanges(this.periods);
-    this.lastAvailable = latestInRanges(this.periods);
   }
 
   markUnavailableBeforeTime(time: string);
@@ -106,15 +84,10 @@ class AvailabilityStore {
   markUnavailableBeforeTime(time) {
     time = time * 1;
 
-    this.firstAvailable = earliestInRanges(this.periods);
-
-    this.periods = rangesAfterRemovingRange(this.periods, {
+    removeRangeFromStore(this, {
       from: this.firstAvailable,
       to: time
     });
-
-    this.firstAvailable = earliestInRanges(this.periods);
-    this.lastAvailable = latestInRanges(this.periods);
   }
 
   hasAvailabilityForPeriod(from: string, to: string);

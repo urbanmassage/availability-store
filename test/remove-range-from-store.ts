@@ -1,7 +1,8 @@
 import {expect} from 'chai';
-import rangesAfterRemovingRange = require('../lib/ranges-after-removing-range');
+import sortRangesOnStore = require('../lib/sort-ranges');
+import removeRangeFromStore = require('../lib/remove-range-from-store');
 
-describe('ranges-after-removing-range', function () {
+describe('remove-range-from-store', function () {
   var tests = [{
     input: [{
       from: 0,
@@ -110,10 +111,16 @@ describe('ranges-after-removing-range', function () {
     var test = tests[i];
     var expectedStringified = JSON.stringify(test.results);
     it('test ' + (i + 1), function () {
-      var result = rangesAfterRemovingRange(test.input, test.remove);
+      const availabilityStore = {
+        periods: test.input,
+        firstAvailable: -1,
+        lastAvailable: -1,
+      }
+      sortRangesOnStore(availabilityStore); // set firstAvailable & lastAvailable
+      removeRangeFromStore(availabilityStore, test.remove);
 
-      expect(JSON.stringify(result)).to.equal(expectedStringified);
-      expect(result.length).to.equal(test.results.length);
+      expect(availabilityStore.periods.length).to.equal(test.results.length);
+      expect(JSON.stringify(availabilityStore.periods)).to.equal(expectedStringified);
     });
   }
 });

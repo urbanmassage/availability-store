@@ -1,4 +1,4 @@
-import IPeriod from '../period';
+import {IPeriod} from '../contracts';
 import sanitizeRange = require('./sanitize-range');
 import rangesIntersectInclusive = require('./ranges-intersect-inclusive');
 

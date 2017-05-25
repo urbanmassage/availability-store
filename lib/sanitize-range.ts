@@ -1,4 +1,4 @@
-import IPeriod from '../period';
+import {IPeriod} from '../contracts';
 
 function sanitizeRange(range: IPeriod): void {
   if (range.from > range.to) {
