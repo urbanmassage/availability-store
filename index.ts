@@ -134,7 +134,7 @@ class AvailabilityStore {
     return intersectStores(store1, store2, new AvailabilityStore());
   }
 
-  intersect(store: AvailabilityStore) {
+  intersect(store: AvailabilityStore): AvailabilityStore {
     return AvailabilityStore.intersectStores(this, store);
   }
 }
