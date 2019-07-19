@@ -7,6 +7,7 @@ import hasAvailabilityForRange = require('./lib/has-availability-for-range');
 import isCompletelyAvailableForRange = require('./lib/is-completely-available-for-range');
 import removeRangeFromStore = require('./lib/remove-range-from-store');
 import addRangeToStore = require('./lib/add-range-to-store');
+import intersectStores = require('./lib/intersect-stores');
 
 class AvailabilityStore {
   periods: AvailabilityStore.IPeriod[];
@@ -125,6 +126,16 @@ class AvailabilityStore {
 
   release() {
     AvailabilityStore.release(this);
+  }
+  static intersectStores(
+    store1: AvailabilityStore,
+    store2: AvailabilityStore,
+  ): AvailabilityStore {
+    return intersectStores(store1, store2, new AvailabilityStore());
+  }
+
+  intersect(store: AvailabilityStore) {
+    return AvailabilityStore.intersectStores(this, store);
   }
 }
 
