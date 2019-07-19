@@ -1,14 +1,19 @@
-import {IPeriod} from '../contracts';
+import { IPeriod } from '../contracts';
 import sanitizeRange = require('./sanitize-range');
 import rangeCompletelyContainsRange = require('./range-completely-contains-range');
 import rangeIsEmpty = require('./range-is-empty');
 
-const debug = require('debug')('availability-store:is-completely-available-for-range');
+const debug = require('debug')(
+  'availability-store:is-completely-available-for-range',
+);
 
 /**
  * check if the searchRange is completely contained within any of the ranges
  */
-function isCompletelyAvailableForRange(ranges: IPeriod[], searchRange: IPeriod): boolean {
+function isCompletelyAvailableForRange(
+  ranges: IPeriod[],
+  searchRange: IPeriod,
+): boolean {
   // if ranges is empty, it cannot contain the searchRange
   if (ranges.length === 0) {
     return false;
@@ -30,6 +35,6 @@ function isCompletelyAvailableForRange(ranges: IPeriod[], searchRange: IPeriod):
   }
 
   return false;
-};
+}
 
 export = isCompletelyAvailableForRange;

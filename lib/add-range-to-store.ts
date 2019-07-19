@@ -1,4 +1,4 @@
-import {IPeriod, IAvailabilityStore} from '../contracts';
+import { IPeriod, IAvailabilityStore } from '../contracts';
 import sanitizeRange = require('./sanitize-range');
 import rangeIsEmpty = require('./range-is-empty');
 import sortRangesOnStore = require('./sort-ranges');
@@ -9,7 +9,10 @@ import rangesAdjoin = require('./ranges-adjoin');
 const debug = require('debug')('availability-store:add-range-to-store');
 
 // this method removes a range from a set of ranges
-function addRangeToStore(availabilityStore:IAvailabilityStore, rangeToAdd: IPeriod): void {
+function addRangeToStore(
+  availabilityStore: IAvailabilityStore,
+  rangeToAdd: IPeriod,
+): void {
   sanitizeRange(rangeToAdd);
 
   // if rangeToAdd is empty, no need to process ranges
@@ -48,7 +51,10 @@ function addRangeToStore(availabilityStore:IAvailabilityStore, rangeToAdd: IPeri
   let added: boolean = false;
 
   availabilityStore.periods.forEach(range => {
-    if (!rangesIntersectInclusive(range, rangeToAdd) && !rangesAdjoin(range, rangeToAdd)) {
+    if (
+      !rangesIntersectInclusive(range, rangeToAdd) &&
+      !rangesAdjoin(range, rangeToAdd)
+    ) {
       if (!added && rangeToAdd.to < range.from) {
         // should be exactly before this one.
         output.push(rangeToAdd);

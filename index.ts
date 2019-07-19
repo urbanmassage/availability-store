@@ -7,6 +7,7 @@ import hasAvailabilityForRange = require('./lib/has-availability-for-range');
 import isCompletelyAvailableForRange = require('./lib/is-completely-available-for-range');
 import removeRangeFromStore = require('./lib/remove-range-from-store');
 import addRangeToStore = require('./lib/add-range-to-store');
+import intersectStores = require('./lib/intersect-stores');
 
 class AvailabilityStore {
   periods: AvailabilityStore.IPeriod[];
@@ -31,7 +32,7 @@ class AvailabilityStore {
 
         this.periods.push({
           from: cached[i].from * 1,
-          to: cached[i].to * 1
+          to: cached[i].to * 1,
         });
       }
     }
@@ -47,7 +48,7 @@ class AvailabilityStore {
 
         newPeriods.push({
           from: this.periods[i].from,
-          to: this.periods[i].to
+          to: this.periods[i].to,
         });
       }
     }
@@ -63,7 +64,7 @@ class AvailabilityStore {
 
     addRangeToStore(this, {
       from: from,
-      to: to
+      to: to,
     });
   }
 
@@ -75,7 +76,7 @@ class AvailabilityStore {
 
     removeRangeFromStore(this, {
       from: from,
-      to: to
+      to: to,
     });
   }
 
@@ -86,7 +87,7 @@ class AvailabilityStore {
 
     removeRangeFromStore(this, {
       from: this.firstAvailable,
-      to: time
+      to: time,
     });
   }
 
@@ -98,7 +99,7 @@ class AvailabilityStore {
 
     return hasAvailabilityForRange(this.periods, {
       from: from,
-      to: to
+      to: to,
     });
   }
 
@@ -110,7 +111,7 @@ class AvailabilityStore {
 
     return isCompletelyAvailableForRange(this.periods, {
       from: from,
-      to: to
+      to: to,
     });
   }
 
@@ -126,13 +127,23 @@ class AvailabilityStore {
   release() {
     AvailabilityStore.release(this);
   }
+  static intersectStores(
+    store1: AvailabilityStore,
+    store2: AvailabilityStore,
+  ): AvailabilityStore {
+    return intersectStores(store1, store2, new AvailabilityStore());
+  }
+
+  intersect(store: AvailabilityStore): AvailabilityStore {
+    return AvailabilityStore.intersectStores(this, store);
+  }
 }
 
 module AvailabilityStore {
   export interface IPeriod {
     from: number;
     to: number;
-  };
+  }
 }
 
 export = AvailabilityStore;

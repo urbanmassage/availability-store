@@ -1,4 +1,4 @@
-import {IPeriod} from '../contracts';
+import { IPeriod } from '../contracts';
 import sanitizeRange = require('./sanitize-range');
 
 function rangeIsEmpty(range: IPeriod): boolean {
@@ -10,6 +10,6 @@ function rangeIsEmpty(range: IPeriod): boolean {
   }
 
   return false;
-};
+}
 
 export = rangeIsEmpty;

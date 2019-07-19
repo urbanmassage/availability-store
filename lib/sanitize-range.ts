@@ -1,4 +1,4 @@
-import {IPeriod} from '../contracts';
+import { IPeriod } from '../contracts';
 
 function sanitizeRange(range: IPeriod): void {
   if (range.from > range.to) {
@@ -6,6 +6,6 @@ function sanitizeRange(range: IPeriod): void {
     range.from = range.to;
     range.to = oldRangeFrom;
   }
-};
+}
 
 export = sanitizeRange;

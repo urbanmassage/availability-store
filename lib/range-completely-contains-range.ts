@@ -1,11 +1,16 @@
-import {IPeriod} from '../contracts';
+import { IPeriod } from '../contracts';
 import sanitizeRange = require('./sanitize-range');
 import rangeIsEmpty = require('./range-is-empty');
 
-const debug = require('debug')('availability-store:range-completely-contains-range');
+const debug = require('debug')(
+  'availability-store:range-completely-contains-range',
+);
 
 // TODO!
-function rangeCompletelyContainsRange(outerRange: IPeriod, innerRange: IPeriod): boolean {
+function rangeCompletelyContainsRange(
+  outerRange: IPeriod,
+  innerRange: IPeriod,
+): boolean {
   // flip the ranges if necessary
   sanitizeRange(outerRange);
   sanitizeRange(innerRange);
@@ -21,19 +26,28 @@ function rangeCompletelyContainsRange(outerRange: IPeriod, innerRange: IPeriod):
 
     debug('a', outerRange, innerRange);
     return true;
-  } else if (outerRange.from === innerRange.from && outerRange.to === innerRange.to) {
+  } else if (
+    outerRange.from === innerRange.from &&
+    outerRange.to === innerRange.to
+  ) {
     // o ------
     // i ------
 
     debug('b', outerRange, innerRange);
     return true;
-  } else if (outerRange.from === innerRange.from && outerRange.to > innerRange.to) {
+  } else if (
+    outerRange.from === innerRange.from &&
+    outerRange.to > innerRange.to
+  ) {
     // o ------
     // i ----
 
     debug('c', outerRange, innerRange);
     return true;
-  } else if (outerRange.from < innerRange.from && outerRange.to === innerRange.to) {
+  } else if (
+    outerRange.from < innerRange.from &&
+    outerRange.to === innerRange.to
+  ) {
     // o ------
     // i   ----
 
@@ -42,6 +56,6 @@ function rangeCompletelyContainsRange(outerRange: IPeriod, innerRange: IPeriod):
   }
 
   return false;
-};
+}
 
 export = rangeCompletelyContainsRange;
