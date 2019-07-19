@@ -1,34 +1,47 @@
-import {expect} from 'chai';
+import { expect } from 'chai';
 import rangeIsEmpty = require('../lib/range-is-empty');
 
 describe('range-is-empty', function() {
-  var tests = [{
-    input: {
-      from: 0,
-      to: 0
+  var tests = [
+    {
+      input: {
+        from: 0,
+        to: 0,
+      },
+      result: true,
     },
-    result: true
-  }, {
-    input: {
-      from: 5,
-      to: 0
+    {
+      input: {
+        from: 5,
+        to: 0,
+      },
+      result: false,
     },
-    result: false
-  }, {
-    input: {
-      from: 2,
-      to: 5
+    {
+      input: {
+        from: 2,
+        to: 5,
+      },
+      result: false,
     },
-    result: false
-  }];
+  ];
 
   for (let i = 0; i < tests.length; i++) {
     (function(test) {
-      it('should determine rangeIsEmpty=' + test.result + ' for [' + test.input.from + '-' + test.input.to + ']', function() {
-        let result = rangeIsEmpty(test.input);
+      it(
+        'should determine rangeIsEmpty=' +
+          test.result +
+          ' for [' +
+          test.input.from +
+          '-' +
+          test.input.to +
+          ']',
+        function() {
+          let result = rangeIsEmpty(test.input);
 
-        expect(result).to.equal(test.result);
-      });
+          expect(result).to.equal(test.result);
+        },
+      );
     })(tests[i]);
   }
 });

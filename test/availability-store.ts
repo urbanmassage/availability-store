@@ -1,4 +1,4 @@
-import {expect} from 'chai';
+import { expect } from 'chai';
 import AvailabilityStore = require('../');
 
 describe('availability-store', function() {
@@ -59,7 +59,9 @@ describe('availability-store', function() {
   it('should still serialize correctly', function() {
     var result = availabilityStore.serialize();
 
-    expect(JSON.stringify(result)).to.equal('[{"from":10,"to":99},{"from":200,"to":350}]');
+    expect(JSON.stringify(result)).to.equal(
+      '[{"from":10,"to":99},{"from":200,"to":350}]',
+    );
   });
 
   it('should contain one period after removing [10-99]', function() {

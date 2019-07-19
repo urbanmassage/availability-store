@@ -1,11 +1,14 @@
-import {IPeriod} from '../contracts';
+import { IPeriod } from '../contracts';
 import sanitizeRange = require('./sanitize-range');
 import rangesIntersectInclusive = require('./ranges-intersect-inclusive');
 
 /**
  * check if the searchRange overlaps any of the specified ranges
  */
-function hasAvailabilityForRange(ranges: IPeriod[], searchRange: IPeriod): boolean {
+function hasAvailabilityForRange(
+  ranges: IPeriod[],
+  searchRange: IPeriod,
+): boolean {
   // if ranges is empty, it cannot contain the searchRange
   if (ranges.length === 0) {
     return false;
@@ -21,6 +24,6 @@ function hasAvailabilityForRange(ranges: IPeriod[], searchRange: IPeriod): boole
   }
 
   return false;
-};
+}
 
 export = hasAvailabilityForRange;

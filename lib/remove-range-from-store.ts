@@ -1,4 +1,4 @@
-import {IPeriod, IAvailabilityStore} from '../contracts';
+import { IPeriod, IAvailabilityStore } from '../contracts';
 import sanitizeRange = require('./sanitize-range');
 import rangeIsEmpty = require('./range-is-empty');
 import rangesIntersectInclusive = require('./ranges-intersect-inclusive');
@@ -7,7 +7,10 @@ import sortRangesOnStore = require('./sort-ranges');
 const debug = require('debug')('availability-store:remove-range-from-store');
 
 // this method removes a range from a set of ranges
-function removeRangeFromStore(availabilityStore: IAvailabilityStore, rangeToRemove: IPeriod): void {
+function removeRangeFromStore(
+  availabilityStore: IAvailabilityStore,
+  rangeToRemove: IPeriod,
+): void {
   // if ranges is empty, it cannot contain the rangeToRemove
   if (availabilityStore.periods.length === 0) {
     return;
@@ -26,7 +29,11 @@ function removeRangeFromStore(availabilityStore: IAvailabilityStore, rangeToRemo
     // rangeToRemove is before all ranges passed in
     // do nothing!
 
-    debug('rangeToRemove.to < earliest', availabilityStore.periods, rangeToRemove);
+    debug(
+      'rangeToRemove.to < earliest',
+      availabilityStore.periods,
+      rangeToRemove,
+    );
 
     return;
   }
@@ -35,7 +42,11 @@ function removeRangeFromStore(availabilityStore: IAvailabilityStore, rangeToRemo
     // rangeToRemove is after all ranges passed in
     // do nothing!
 
-    debug('rangeToRemove.from > latest', availabilityStore.periods, rangeToRemove);
+    debug(
+      'rangeToRemove.from > latest',
+      availabilityStore.periods,
+      rangeToRemove,
+    );
 
     return;
   }
@@ -55,19 +66,26 @@ function removeRangeFromStore(availabilityStore: IAvailabilityStore, rangeToRemo
         // -  ----------
         // =
         // covers more than period, drop period
-
         // +   --------
         // -   --------
         // =
         // exactly covers period, drop period
-      } else if (rangeToRemove.from > range.from && rangeToRemove.from < range.to && rangeToRemove.to > range.to) {
+      } else if (
+        rangeToRemove.from > range.from &&
+        rangeToRemove.from < range.to &&
+        rangeToRemove.to > range.to
+      ) {
         // +  -----
         // -     -----
         // =  ---
 
         range.to = rangeToRemove.from;
         output.push(range);
-      } else if (rangeToRemove.from < range.from && rangeToRemove.to > range.from && rangeToRemove.to < range.to) {
+      } else if (
+        rangeToRemove.from < range.from &&
+        rangeToRemove.to > range.from &&
+        rangeToRemove.to < range.to
+      ) {
         // +     -----
         // -  -----
         // =       ---
@@ -83,11 +101,11 @@ function removeRangeFromStore(availabilityStore: IAvailabilityStore, rangeToRemo
 
         const firstPartOfSplit = {
           from: range.from,
-          to: rangeToRemove.from
+          to: rangeToRemove.from,
         };
         const secondPartOfSplit = {
           from: rangeToRemove.to,
-          to: range.to
+          to: range.to,
         };
 
         if (!rangeIsEmpty(firstPartOfSplit)) {
@@ -102,6 +120,6 @@ function removeRangeFromStore(availabilityStore: IAvailabilityStore, rangeToRemo
   availabilityStore.periods = output;
 
   return sortRangesOnStore(availabilityStore);
-};
+}
 
 export = removeRangeFromStore;

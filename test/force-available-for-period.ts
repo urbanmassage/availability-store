@@ -1,4 +1,4 @@
-import {expect} from 'chai';
+import { expect } from 'chai';
 import AvailabilityStore = require('../');
 
 describe('availability-store', function() {

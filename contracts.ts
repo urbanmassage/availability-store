@@ -1,7 +1,7 @@
 export interface IPeriod {
   from: number;
   to: number;
-};
+}
 
 export interface IAvailabilityStore {
   periods: IPeriod[];

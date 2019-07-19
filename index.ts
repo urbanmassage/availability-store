@@ -31,7 +31,7 @@ class AvailabilityStore {
 
         this.periods.push({
           from: cached[i].from * 1,
-          to: cached[i].to * 1
+          to: cached[i].to * 1,
         });
       }
     }
@@ -47,7 +47,7 @@ class AvailabilityStore {
 
         newPeriods.push({
           from: this.periods[i].from,
-          to: this.periods[i].to
+          to: this.periods[i].to,
         });
       }
     }
@@ -63,7 +63,7 @@ class AvailabilityStore {
 
     addRangeToStore(this, {
       from: from,
-      to: to
+      to: to,
     });
   }
 
@@ -75,7 +75,7 @@ class AvailabilityStore {
 
     removeRangeFromStore(this, {
       from: from,
-      to: to
+      to: to,
     });
   }
 
@@ -86,7 +86,7 @@ class AvailabilityStore {
 
     removeRangeFromStore(this, {
       from: this.firstAvailable,
-      to: time
+      to: time,
     });
   }
 
@@ -98,7 +98,7 @@ class AvailabilityStore {
 
     return hasAvailabilityForRange(this.periods, {
       from: from,
-      to: to
+      to: to,
     });
   }
 
@@ -110,7 +110,7 @@ class AvailabilityStore {
 
     return isCompletelyAvailableForRange(this.periods, {
       from: from,
-      to: to
+      to: to,
     });
   }
 
@@ -132,7 +132,7 @@ module AvailabilityStore {
   export interface IPeriod {
     from: number;
     to: number;
-  };
+  }
 }
 
 export = AvailabilityStore;

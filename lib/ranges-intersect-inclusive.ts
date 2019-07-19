@@ -1,4 +1,4 @@
-import {IPeriod} from '../contracts';
+import { IPeriod } from '../contracts';
 import sanitizeRange = require('./sanitize-range');
 import rangeIsEmpty = require('./range-is-empty');
 import rangeCompletelyContainsRange = require('./range-completely-contains-range');
