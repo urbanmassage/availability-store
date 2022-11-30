@@ -141,12 +141,13 @@ describe('add-range-to-store', function() {
     var expectedStringified = JSON.stringify(test.results);
     it('test ' + (i + 1), function() {
       const availabilityStore = {
+        log: [],
         periods: test.input,
         firstAvailable: -1,
         lastAvailable: -1,
       };
       sortRangesOnStore(availabilityStore); // set firstAvailable & lastAvailable
-      addRangeToStore(availabilityStore, test.add);
+      addRangeToStore(availabilityStore, test.add, 'reason');
 
       expect(availabilityStore.periods.length).to.equal(test.results.length);
       expect(JSON.stringify(availabilityStore.periods)).to.equal(

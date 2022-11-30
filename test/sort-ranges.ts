@@ -1,6 +1,5 @@
 import { expect } from 'chai';
 import sortRangesOnStore = require('../lib/sort-ranges');
-import { IAvailabilityStore } from '../contracts';
 
 function isSortedCorrectly(ranges) {
   var last = null;
@@ -15,6 +14,7 @@ function isSortedCorrectly(ranges) {
 describe('sort-ranges', function() {
   var tests = [
     {
+      log: [],
       periods: [
         {
           from: 0,
@@ -29,6 +29,7 @@ describe('sort-ranges', function() {
       lastAvailable: -1,
     },
     {
+      log: [],
       periods: [
         {
           from: 100,
@@ -43,6 +44,7 @@ describe('sort-ranges', function() {
       lastAvailable: -1,
     },
     {
+      log: [],
       periods: [
         {
           from: 50,
