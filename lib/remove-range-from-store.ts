@@ -1,4 +1,4 @@
-import { IPeriod, IAvailabilityStore } from '../contracts';
+import { IAvailabilityStore, IPeriod } from '../contracts';
 import sanitizeRange = require('./sanitize-range');
 import rangeIsEmpty = require('./range-is-empty');
 import rangesIntersectInclusive = require('./ranges-intersect-inclusive');
@@ -10,7 +10,15 @@ const debug = require('debug')('availability-store:remove-range-from-store');
 function removeRangeFromStore(
   availabilityStore: IAvailabilityStore,
   rangeToRemove: IPeriod,
+  reason: string,
 ): void {
+  availabilityStore.log.push({
+    action: 'remove',
+    from: rangeToRemove.from,
+    to: rangeToRemove.to,
+    reason,
+  });
+  
   // if ranges is empty, it cannot contain the rangeToRemove
   if (availabilityStore.periods.length === 0) {
     return;

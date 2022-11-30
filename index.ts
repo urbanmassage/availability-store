@@ -13,6 +13,7 @@ class AvailabilityStore {
   periods: AvailabilityStore.IPeriod[];
   firstAvailable: number;
   lastAvailable: number;
+  log: AvailabilityStore.ILogItem[] = [];
 
   constructor() {
     AvailabilityStore.reset(this);
@@ -22,6 +23,7 @@ class AvailabilityStore {
     obj.firstAvailable = 0;
     obj.lastAvailable = 0;
     obj.periods = [];
+    obj.log = [];
   }
 
   setupFromCachedPeriods(cached: AvailabilityStore.IPeriod[]) {
@@ -29,6 +31,13 @@ class AvailabilityStore {
     for (var i = 0; i < cached.length; i++) {
       if (rangeIsEmpty(cached[i]) !== true) {
         // only add period if it's not empty
+
+        this.log.push({
+          action: 'add',
+          from: cached[i].from,
+          to: cached[i].to,
+          reason: 'restore cache',
+        });
 
         this.periods.push({
           from: cached[i].from * 1,
@@ -56,39 +65,39 @@ class AvailabilityStore {
     return newPeriods;
   }
 
-  forceAvailableForPeriod(from: string, to: string);
-  forceAvailableForPeriod(from: number, to: number);
-  forceAvailableForPeriod(from, to) {
+  forceAvailableForPeriod(from: string, to: string, reason: string);
+  forceAvailableForPeriod(from: number, to: number, reason: string);
+  forceAvailableForPeriod(from, to, reason: string) {
     from = from * 1;
     to = to * 1;
 
     addRangeToStore(this, {
       from: from,
       to: to,
-    });
+    }, reason);
   }
 
-  markUnavailableForPeriod(from: string, to: string);
-  markUnavailableForPeriod(from: number, to: number);
-  markUnavailableForPeriod(from, to) {
+  markUnavailableForPeriod(from: string, to: string, reason: string);
+  markUnavailableForPeriod(from: number, to: number, reason: string);
+  markUnavailableForPeriod(from, to, reason: string) {
     from = from * 1;
     to = to * 1;
 
     removeRangeFromStore(this, {
       from: from,
       to: to,
-    });
+    }, reason);
   }
 
-  markUnavailableBeforeTime(time: string);
-  markUnavailableBeforeTime(time: number);
-  markUnavailableBeforeTime(time) {
+  markUnavailableBeforeTime(time: string, reason: string);
+  markUnavailableBeforeTime(time: number, reason: string);
+  markUnavailableBeforeTime(time, reason: string) {
     time = time * 1;
 
     removeRangeFromStore(this, {
       from: this.firstAvailable,
       to: time,
-    });
+    }, reason);
   }
 
   hasAvailabilityForPeriod(from: string, to: string);
@@ -144,6 +153,7 @@ module AvailabilityStore {
     from: number;
     to: number;
   }
+  export interface ILogItem { action: 'add' | 'remove', reason: string, from: number, to: number };
 }
 
 export = AvailabilityStore;

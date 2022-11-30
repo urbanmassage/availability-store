@@ -9,31 +9,31 @@ describe('availability-store', function() {
   });
 
   it('should contain one period after adding [100-200]', function() {
-    availabilityStore.forceAvailableForPeriod(100, 200);
+    availabilityStore.forceAvailableForPeriod(100, 200, 'reason');
 
     expect(availabilityStore.periods.length).to.equal(1);
   });
 
   it('should contain two period after adding [10-30]', function() {
-    availabilityStore.forceAvailableForPeriod(10, 30);
+    availabilityStore.forceAvailableForPeriod(10, 30, 'reason');
 
     expect(availabilityStore.periods.length).to.equal(2);
   });
 
   it('should contain three period after adding [50-60]', function() {
-    availabilityStore.forceAvailableForPeriod(50, 60);
+    availabilityStore.forceAvailableForPeriod(50, 60, 'reason');
 
     expect(availabilityStore.periods.length).to.equal(3);
   });
 
   it('should contain four period after adding [220-260]', function() {
-    availabilityStore.forceAvailableForPeriod(220, 260);
+    availabilityStore.forceAvailableForPeriod(220, 260, 'reason');
 
     expect(availabilityStore.periods.length).to.equal(4);
   });
 
   it('should contain four period after adding [140-210]', function() {
-    availabilityStore.forceAvailableForPeriod(140, 210);
+    availabilityStore.forceAvailableForPeriod(140, 210, 'reason');
 
     expect(availabilityStore.periods.length).to.equal(4);
   });

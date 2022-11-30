@@ -1,4 +1,4 @@
-import { IPeriod, IAvailabilityStore } from '../contracts';
+import { IAvailabilityStore, IPeriod } from '../contracts';
 import sanitizeRange = require('./sanitize-range');
 import rangeIsEmpty = require('./range-is-empty');
 import sortRangesOnStore = require('./sort-ranges');
@@ -12,8 +12,16 @@ const debug = require('debug')('availability-store:add-range-to-store');
 function addRangeToStore(
   availabilityStore: IAvailabilityStore,
   rangeToAdd: IPeriod,
+  reason: string,
 ): void {
   sanitizeRange(rangeToAdd);
+
+  availabilityStore.log.push({
+    action: 'add',
+    from: rangeToAdd.from,
+    to: rangeToAdd.to,
+    reason,
+  });
 
   // if rangeToAdd is empty, no need to process ranges
   if (rangeIsEmpty(rangeToAdd)) {
