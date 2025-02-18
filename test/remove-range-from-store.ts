@@ -153,9 +153,10 @@ describe('remove-range-from-store', function() {
         periods: test.input,
         firstAvailable: -1,
         lastAvailable: -1,
+        log: [],
       };
       sortRangesOnStore(availabilityStore); // set firstAvailable & lastAvailable
-      removeRangeFromStore(availabilityStore, test.remove);
+      removeRangeFromStore(availabilityStore, test.remove, 'test');
 
       expect(availabilityStore.periods.length).to.equal(test.results.length);
       expect(JSON.stringify(availabilityStore.periods)).to.equal(

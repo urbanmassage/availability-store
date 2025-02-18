@@ -34,7 +34,7 @@ function intersectStores(
       store2.isAvailableForPeriod(prevStep, step)
     ) {
       lastValue = true;
-      newStore.forceAvailableForPeriod(prevStep, step);
+      newStore.forceAvailableForPeriod(prevStep, step, 'reason');
     }
   });
 

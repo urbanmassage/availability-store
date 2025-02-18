@@ -9,7 +9,7 @@ describe('availability-store', function() {
   });
 
   it('should contain one period after adding [10-99]', function() {
-    availabilityStore.forceAvailableForPeriod(10, 99);
+    availabilityStore.forceAvailableForPeriod(10, 99, 'reason');
 
     expect(availabilityStore.periods.length).to.equal(1);
   });
@@ -33,7 +33,7 @@ describe('availability-store', function() {
   });
 
   it('should contain two periods after adding [200-300]', function() {
-    availabilityStore.forceAvailableForPeriod(200, 300);
+    availabilityStore.forceAvailableForPeriod(200, 300, 'reason');
 
     expect(availabilityStore.periods.length).to.equal(2);
   });
@@ -51,7 +51,7 @@ describe('availability-store', function() {
   });
 
   it('should still contain two periods after adding [200-350]', function() {
-    availabilityStore.forceAvailableForPeriod(200, 350);
+    availabilityStore.forceAvailableForPeriod(200, 350, 'reason');
 
     expect(availabilityStore.periods.length).to.equal(2);
   });
@@ -65,15 +65,15 @@ describe('availability-store', function() {
   });
 
   it('should contain one period after removing [10-99]', function() {
-    availabilityStore.markUnavailableForPeriod(10, 99);
+    availabilityStore.markUnavailableForPeriod(10, 99, 'reason');
 
     expect(availabilityStore.periods.length).to.equal(1);
   });
 
   it('should work for string timestamps', function() {
     var store = new AvailabilityStore();
-    store.forceAvailableForPeriod('1432884600', '1432890000');
-    store.markUnavailableForPeriod(1432884600, 1432890000);
+    store.forceAvailableForPeriod('1432884600', '1432890000', 'reason');
+    store.markUnavailableForPeriod(1432884600, 1432890000, 'reason');
 
     expect(store.periods.length).to.equal(0);
   });
